@@ -187,3 +187,9 @@ This can be displayed graphically:
 plot_model(model.width, show.values = TRUE, transform = NULL,
            title = "Log-Odds (P>1000)", show.p = FALSE)
 ```
+
+
+
+
+
+
