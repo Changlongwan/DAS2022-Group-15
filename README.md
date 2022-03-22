@@ -17,9 +17,9 @@ First check completed [schedule update: 19:00 22/3/2022]
 
 
 # DDL for PPT : 24/3/2022
-schedule update: 17:20 22/3/2022  
+  
 
-Template is selected, waiting for editing
+Template is selected, waiting for editing [schedule update: 14:20 22/3/2022]  
 
 
 # Final Check : 24/3/2022
