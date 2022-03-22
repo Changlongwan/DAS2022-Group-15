@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # DAS2022-Group-15
 
 ---
@@ -35,28 +40,16 @@ library(stats)
 
 ```{r}
 #read the data
+setwd("C:/Users/86189/Documents")
 IKEA<-read.csv("dataset15.csv")
-```
-
-```{r}
 # select variables
 IKEA<-IKEA %>%
   select(category,price,sellable_online,other_colors,depth,height,width)
-```
-
-```{r}
-# handling NA variables
-IKEA$depth[which(is.na(IKEA$depth))]<-0
-IKEA$height[which(is.na(IKEA$height))]<-0
-IKEA$width[which(is.na(IKEA$width))]<-0
-```
-
-```{r}
+#remove NA data
+IKEA<-na.omit(IKEA)
 # handling factor variables
 IKEA$category<-as.factor(IKEA$category)
-
 IKEA$sellable_online<-as.factor(IKEA$sellable_online)
-
 IKEA$other_colors<-as.factor(IKEA$other_colors)
 
 IKEA$price[IKEA$price<1000]<-"p<1000"
@@ -64,12 +57,33 @@ IKEA$price[IKEA$price!="p<1000"]<-"p>=1000"
 IKEA$price<-as.factor(IKEA$price)
 ```
 
+# Introduction 
 
 
+# Data Description
 
+### category
 
-# other_colors
-## Data summarization and Visualization
+### sellable_online
+
+```{r}
+IKEA %>% 
+  tabyl(price, sellable_online) %>% 
+  adorn_percentages() %>% 
+  adorn_pct_formatting() %>% 
+  adorn_ns() # To show original counts
+
+```
+
+```{r}
+ggplot(IKEA, aes(x=sellable_online ,  y = ..prop.., group=price, fill=price)) + 
+    geom_bar(position="dodge", stat="count") +
+    labs(y = "Proportion",title = "Barplot of price by sellable_online.")
+```
+
+We can see that a larger proportion of instructors in the low price group are true sellable online (1.5% vs 98.5%), the high price group is also comprised of more true sellable online (00.0% vs 100.0%). Now we shall fit a logistic regression model to determine whether the classification of price can be predicted from sellable online.
+
+### other_colors
 
 ```{r}
 #summarize the data in a table format
@@ -87,7 +101,37 @@ ggplot(data=IKEA,aes(x = price, group = other_colors))+
 
 We can see that in furniture with other colors (58.2% vs 41.8%) and furniture without other colors (71.7% vs 28.3%), the proportion of furniture priced below SAR 1000 is higher. Now we will fit a logistic regression model to determine whether the price of the furniture can be predicted over 1000 Saudi Riyals based on whether the furniture is available in other colors.
 
-## Log-odds
+### depth 
+
+### height
+
+```{r}
+ggplot(data = IKEA, aes(x = price, y = height, fill = price)) +
+  geom_boxplot() +
+  labs(x = "price", y = "height")+ 
+  theme(legend.position = "none")
+```
+
+Here we can see that the high price tend to be more height than that of low price. Now, let’s fit a logistic regression model to see whether height is a significant predictor of the odds of the price being high or low.
+
+### width
+
+```{r}
+#visualize the distribution using a bar plot
+ggplot(data = IKEA,aes(x = price, y = width, fill = price))+
+  geom_boxplot()+
+  labs(x="price",y="width")
+```
+
+Here we can see that furniture priced over SAR 1000 tends to be wider than furniture priced under SAR 1000.
+
+# Formal data analysis
+
+### category
+
+### sellable_online
+
+### other_colors
 
 The logistic regression model is given by:
 
@@ -103,8 +147,10 @@ Fitting the model yields the result:
 
 ```{r}
 # model output
-model.other_colors %>%
-  summary()
+model.other_colors.coef.logodds <- model.other_colors %>%
+                            summary() %>%
+                            coef()
+model.other_colors.coef.logodds
 ```
 
 So, the best-fitting line is given as:
@@ -120,7 +166,7 @@ This provides us with a point estimate of how the log-odds changes with ethnicit
 ```{r}
 # 95% confidence interval
 confint(model.other_colors) %>%
-  kable()
+   kable()
 ```
 
 Hence the point estimate for the log-odds is 0.6, which has a corresponding 95% confidence interval of (0.22, 0.98). 
@@ -132,20 +178,12 @@ plot_model(model.other_colors, show.values = TRUE, transform = NULL,
            title = "Log-Odds (P>1000)", show.p = FALSE)
 ```
 
+### depth 
 
-# width
-## Data Visualization
+### height
 
-```{r}
-#visualize the distribution using a bar plot
-ggplot(data = IKEA,aes(x = price, y = width, fill = price))+
-  geom_boxplot()+
-  labs(x="price",y="width")
-```
+### width
 
-Here we can see that furniture priced over SAR 1000 tends to be wider than furniture priced under SAR 1000.
-
-## Log-odds
 The logistic regression model is given by:
 
 ```{r}
@@ -160,8 +198,10 @@ Fitting the model yields the result:
 
 ```{r}
 # model output
-model.width %>%
-  summary()
+model.width.coef.logodds <- model.width %>%
+                            summary() %>%
+                            coef()
+model.width.coef.logodds
 ```
 
 So, the best-fitting line is given as:
@@ -179,12 +219,101 @@ This provides us with a point estimate of how the log-odds changes with age, how
 confint(model.width) %>%
   kable()
 ```
+
 Hence the point estimate for the log-odds is 0.02, which has a corresponding 95% confidence interval of (0.014, 0.022). 
 This can be displayed graphically:
 
 ```{r}
-#Log odds graph
+# Log odds graph
 plot_model(model.width, show.values = TRUE, transform = NULL,
            title = "Log-Odds (P>1000)", show.p = FALSE)
 ```
+
+### Multivariate Generalized Linear Models
+
+We set up a multivariate generalized linear model for all explanatory variables. The model fitting results are down:
+
+```{r}
+## price ~ category + sellable_online + other_colors + depth + height + width ##
+model.1 <- glm(price ~ category + sellable_online + other_colors + depth + height + width, data = IKEA, family = binomial(link = "logit"))
+```
+
+```{r}
+# model output
+model.1.coef.logodds <- model.1 %>%
+                            summary() %>%
+                            coef()
+model.1.coef.logodds
+```
+
+We found that the results for two variables, category and sellable_online, were not significant. Therefore, we decided to remove these two variables and fit the model again. The model is as follows:
+
+```{r}
+## price ~ other_colors + depth + height + width ##
+model.2 <- glm(price ~ other_colors + depth + height + width, data = IKEA, family = binomial(link = "logit"))
+
+equatiomatic::extract_eq(model.2)
+#This function can automatically transform the model to mathematical equation
+```
+
+Fitting the model yields the result:
+
+```{r}
+# model output
+model.2.coef.logodds <- model.2 %>%
+                            summary() %>%
+                            coef()
+model.2.coef.logodds
+```
+
+Hence, the best-fitting line is given as:
+
+```{r}
+equatiomatic::extract_eq(model.2,use_coefs = TRUE)
+```
+
+We see that the coeﬀicient for furniture that offers other colour options (other_colorsYes) is positive, indicating a higher chance that the price of this type of furniture exceeds SAR1,000. Secondly, the coefficient for depth is positive, suggesting that furniture with greater depth has a higher chance of costing more than SAR 1000. Similarly, the coefficients for height and width are both positive, showing that furniture with a greater height and width is more likely to sell for more than SAR 1,000.
+
+This provides us with a point estimate of how the log-odds changes with age, however, we are also interested in producing a 95% confidence interval for these log-odds.
+
+```{r}
+# 95% confidence interval
+confint(model.2) %>%
+  kable()
+```
+
+For ease of interpretation, we indexed the results.
+
+```{r}
+# 95% confidence interval
+exp(confint(model.2) ) %>%
+  kable()
+```
+
+```{r}
+# odds graph
+plot_model(model.2, show.values = TRUE, 
+           title = "Odds (P>1000)", show.p = FALSE, value.offset = 0.25)
+```
+
+We explain the odds ratio as follows: the furnitures offering other colors’ odds of the price over SAR 1000 were 2.01 times that of not offering.Every unit of depth of furniture increases the chance that they will cost more than 1000 Saudi Riyals (by a factor of 1.03). Similarly, with each unit increase in the length and width of furniture, the chance that they will cost more than 1000 Saudi riyals also increases (by a factor of 1.01 and 1.02).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
