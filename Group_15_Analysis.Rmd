@@ -1,12 +1,12 @@
-# DAS2022-Group-15
-
 ---
-title: "IKEA"
+output: 
+  pdf_document: 
+    latex_engine: xelatex
+---
+---
+title: "Analysis of factors affecting the selling price of IKEA furnitures"
 author: "Changlong Wan, Lixia Li, Nadsupa Chanachu, Ruiqi Huang & Shuhan Wang"
-output:
-  pdf_document: default
-  word_document: default
-number_sections: yes
+
 ---
 
 ```{r, include=FALSE}
@@ -54,22 +54,32 @@ IKEA$price<-as.factor(IKEA$price)
 
 # Introduction 
 
+With the development of economy, people are more and more seeking to improve the quality of life. As an indispensable part of people's lives, furniture has also received more attention. This article will use data from IKEA Saudi Arabia to find out what factors influence the price of furniture over SAR 1000.
+
+We will use a generalized linear model (GLM) to separately analyze six factors that may affect the price: category , sellable_online , other_colors , depth , height and width. And at the end use the multivariate linear model to analyze and compare the impact of these six variables on the price.
 
 # Data Description
 
-### category
-
-### sellable_online
+## Category
 
 ```{r}
-IKEA %>% 
+ggplot(data=IKEA,aes(x = price, group = category))+
+  geom_bar(aes(y = ..prop..,fill = category), stat = "count", position = "dodge")+
+  labs(x="price",y="category")
+```
+
+## Sellable_online
+
+```{r}
+table1<-IKEA %>% 
   tabyl(price, sellable_online) %>% 
   adorn_percentages() %>% 
   adorn_pct_formatting() %>% 
   adorn_ns() # To show original counts
-
+table1 %>%
+  kable() %>%
+  kable_styling(latex_options = 'HOLD_position', )
 ```
-
 ```{r}
 ggplot(IKEA, aes(x=sellable_online ,  y = ..prop.., group=price, fill=price)) + 
     geom_bar(position="dodge", stat="count") +
@@ -78,16 +88,21 @@ ggplot(IKEA, aes(x=sellable_online ,  y = ..prop.., group=price, fill=price)) +
 
 We can see that a larger proportion of instructors in the low price group are true sellable online (1.5% vs 98.5%), the high price group is also comprised of more true sellable online (00.0% vs 100.0%). Now we shall fit a logistic regression model to determine whether the classification of price can be predicted from sellable online.
 
-### other_colors
+## Other_colors
 
 ```{r}
 #summarize the data in a table format
-IKEA %>% 
+table2<-IKEA %>% 
   tabyl(other_colors, price) %>% 
   adorn_percentages() %>% 
   adorn_pct_formatting() %>% 
   adorn_ns() 
 
+table2 %>%
+  kable() %>%
+  kable_styling(latex_options = 'HOLD_position', )
+```
+```{r}
 #visualize the distribution using a bar plot
 ggplot(data=IKEA,aes(x = price, group = other_colors))+
   geom_bar(aes(y = ..prop..,fill = other_colors), stat = "count", position = "dodge")+
@@ -96,9 +111,15 @@ ggplot(data=IKEA,aes(x = price, group = other_colors))+
 
 We can see that in furniture with other colors (58.2% vs 41.8%) and furniture without other colors (71.7% vs 28.3%), the proportion of furniture priced below SAR 1000 is higher. Now we will fit a logistic regression model to determine whether the price of the furniture can be predicted over 1000 Saudi Riyals based on whether the furniture is available in other colors.
 
-### depth 
+## Depth 
 
-### height
+```{r}
+ggplot(data = IKEA,aes(x = price, y = depth, fill = price))+
+  geom_boxplot()+
+  labs(x="price",y="depth")
+```
+
+## Height
 
 ```{r}
 ggplot(data = IKEA, aes(x = price, y = height, fill = price)) +
@@ -109,7 +130,7 @@ ggplot(data = IKEA, aes(x = price, y = height, fill = price)) +
 
 Here we can see that the high price tend to be more height than that of low price. Now, let’s fit a logistic regression model to see whether height is a significant predictor of the odds of the price being high or low.
 
-### width
+## Width
 
 ```{r}
 #visualize the distribution using a bar plot
@@ -122,11 +143,21 @@ Here we can see that furniture priced over SAR 1000 tends to be wider than furni
 
 # Formal data analysis
 
-### category
+## Category
 
-### sellable_online
+Logistic regression model:
+```{r}
+model.category<-glm(price ~ category, data = IKEA, family = binomial(link = "logit"))
 
-### other_colors
+equatiomatic::extract_eq(model.category)
+model.category%>%
+  summary()
+```
+From the above results, the p-values of each factor in category are too large, thus we can conclude that variable category have no  impact on price.
+
+## Sellable_online
+
+## Other_colors
 
 The logistic regression model is given by:
 
@@ -173,11 +204,40 @@ plot_model(model.other_colors, show.values = TRUE, transform = NULL,
            title = "Log-Odds (P>1000)", show.p = FALSE)
 ```
 
-### depth 
+## Depth 
 
-### height
+Logistic regression model:
 
-### width
+```{r}
+model.depth<-glm(price ~ depth, data = IKEA, family = binomial(link = "logit"))
+
+equatiomatic::extract_eq(model.depth)
+model.depth%>%
+  summary()
+
+```
+
+From the above results, the p-value is smaller than 0.025, thus we can conclude that variable depth have impact on price.
+And with depth increases one unit, the log-odds of price(p>1000) will increase 0.0164.
+
+95% confidence interval:
+
+```{r}
+confint(model.depth)%>%
+  kable()
+```
+
+Log odds:
+
+```{r}
+plot_model(model.depth,show.values = TRUE,title = "Logodds(p>1000)", show.p = FALSE)
+```
+
+The above figure shows the 95% CI of depth is 1.02
+
+## Height
+
+## Width
 
 The logistic regression model is given by:
 
@@ -205,7 +265,7 @@ So, the best-fitting line is given as:
 equatiomatic::extract_eq(model.width,use_coefs = TRUE)
 ```
 
-Therefore, for each additional unit of width, the log odds of a furniture being more than SAR 1000 increase by 0.02.
+Therefore, for each additional unit of width, the log odds of furniture being more than SAR 1000 increase by 0.02.
 
 This provides us with a point estimate of how the log-odds changes with age, however, we are also interested in producing a 95% confidence interval for these log-odds.
 
@@ -224,7 +284,7 @@ plot_model(model.width, show.values = TRUE, transform = NULL,
            title = "Log-Odds (P>1000)", show.p = FALSE)
 ```
 
-### Multivariate Generalized Linear Models
+## Multivariate Generalized Linear Models
 
 We set up a multivariate generalized linear model for all explanatory variables. The model fitting results are down:
 
@@ -267,7 +327,7 @@ Hence, the best-fitting line is given as:
 equatiomatic::extract_eq(model.2,use_coefs = TRUE)
 ```
 
-We see that the coeﬀicient for furniture that offers other colour options (other_colorsYes) is positive, indicating a higher chance that the price of this type of furniture exceeds SAR1,000. Secondly, the coefficient for depth is positive, suggesting that furniture with greater depth has a higher chance of costing more than SAR 1000. Similarly, the coefficients for height and width are both positive, showing that furniture with a greater height and width is more likely to sell for more than SAR 1,000.
+We see that the coeﬀicient for furniture that offers other color options (other_colorsYes) is positive, indicating a higher chance that the price of this type of furniture exceeds SAR1,000. Secondly, the coefficient for depth is positive, suggesting that furniture with greater depth has a higher chance of costing more than SAR 1000. Similarly, the coefficients for height and width are both positive, showing that furniture with a greater height and width is more likely to sell for more than SAR 1,000.
 
 This provides us with a point estimate of how the log-odds changes with age, however, we are also interested in producing a 95% confidence interval for these log-odds.
 
@@ -291,11 +351,11 @@ plot_model(model.2, show.values = TRUE,
            title = "Odds (P>1000)", show.p = FALSE, value.offset = 0.25)
 ```
 
-We explain the odds ratio as follows: the furnitures offering other colors’ odds of the price over SAR 1000 were 2.01 times that of not offering.Every unit of depth of furniture increases the chance that they will cost more than 1000 Saudi Riyals (by a factor of 1.03). Similarly, with each unit increase in the length and width of furniture, the chance that they will cost more than 1000 Saudi riyals also increases (by a factor of 1.01 and 1.02).
+We explain the odds ratio as follows: the furniture offering other colors’ odds of the price over SAR 1000 were 2.01 times that of not offering.Every unit of depth of furniture increases the chance that they will cost more than 1000 Saudi Riyals (by a factor of 1.03). Similarly, with each unit increase in the length and width of furniture, the chance that they will cost more than 1000 Saudi riyals also increases (by a factor of 1.01 and 1.02).
 
+# Conclusion
 
-
-
+We found that among the six explanatory variables, whether other colors were provided and the depth, width, and height of furniture had an impact on whether the price of furniture could exceed 1000 Saudi riyals. The category and whether it is sold online has no significant effect on it.
 
 
 
