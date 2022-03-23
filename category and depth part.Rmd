@@ -3,6 +3,7 @@ title: "category and depth part"
 output:
   html_document:
     df_print: paged
+  pdf_document: default
 date: '2022-03-16'
 ---
 
@@ -13,8 +14,8 @@ knitr::opts_chunk$set(echo = TRUE)
 # packages
 ```{r,include=FALSE}
 library(kableExtra)
-library(gridExtra)
 library(tinytex)
+library(gridExtra)
 library(equatiomatic)
 library(gapminder)
 library(ggplot2)
@@ -73,7 +74,8 @@ IKEA%>%
   
 ggplot(data=IKEA,aes(x = price, group = category))+
   geom_bar(aes(y = ..prop..,fill = category), stat = "count", position = "dodge")+
-  labs(x="price",y="category")
+  labs(x="price",y="proportion of category",title = "Barplot of price by category")+
+  theme(plot.title = element_text(hjust=0.5))
 ```
 
 Logistic regression model:
@@ -91,7 +93,8 @@ Exploratory analysis:
 ```{r}
 ggplot(data = IKEA,aes(x = price, y = depth, fill = price))+
   geom_boxplot()+
-  labs(x="price",y="depth")
+  labs(x="price",y="depth",title = "Boxplot of price by depth")+
+  theme(plot.title = element_text(hjust=0.5))
 ```
 
 Logistic regression model:
