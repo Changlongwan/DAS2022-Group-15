@@ -13,7 +13,7 @@ Presentation (nadsupa Shuhan Lixia)
 
 
 Respective code is completed, waiting for checking and merging [schedule update: 17:20 22/3/2022]  
-First check completed [schedule update: 19:00 22/3/2022]
+First check completed [schedule update: 19:00 22/3/2022]  
 Final version completed [schedule update: 14:00 23/3/2022]  
 
 
