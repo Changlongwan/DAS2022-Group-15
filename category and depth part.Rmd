@@ -63,7 +63,14 @@ IKEA$price<-as.factor(IKEA$price)
 
 # category
 Exploratory analysis:
+This table indicate the number of each type of furniture.
 ```{r}
+IKEA%>%
+  group_by(category)%>%
+  summarize(count=n())%>%
+  kable()%>%
+  kable_styling(latex_options = 'HOLD_position', )
+  
 ggplot(data=IKEA,aes(x = price, group = category))+
   geom_bar(aes(y = ..prop..,fill = category), stat = "count", position = "dodge")+
   labs(x="price",y="category")
@@ -102,7 +109,8 @@ And with depth increases one unit, the log-odds of price(p>1000) will increase 0
 95% confidence interval:
 ```{r}
 confint(model.depth)%>%
-  kable()
+  kable()%>%
+  kable_styling(latex_options = 'HOLD_position', )
 ```
 
 Log odds:
