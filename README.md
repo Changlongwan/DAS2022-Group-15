@@ -1,5 +1,6 @@
 # DAS2022-Group-15
-Data: IKEA
+Data: IKEA  
+Task: Which properties of furniture influence whether they cost more than 1000 Saudi Riyals?
 
 # Task Assignment
 Member 1 coding (Changlong)  
