@@ -494,7 +494,11 @@ The Multivariate Generalized Linear Models has the highest R2 adj value and the 
 
 We found that among the six explanatory variables, whether other colors were provided and the depth, width, and height of furniture had an impact on whether the price of furniture could exceed 1000 Saudi riyals. The category and whether it is sold online has no significant effect on it.
 
+# Future Work
 
+When dealing with 'NA' datas, we just ommitted all of them, thus the avalible data numbers might be insufficient. There might be better way to tackle with 'NA' data. 
+
+Moreover, the variable 'category' is distinguished according to the type of furnitures， and they are found not to have an obvious impact on the variable 'price'. Maybe it's proper to use clustering to dealing with 'category' to get a better result.
 
 
 
