@@ -470,6 +470,26 @@ plot_model(model.2, show.values = TRUE,
 
 We explain the odds ratio as follows: the furniture offering other colors’ odds of the price over SAR 1000 were 2.01 times that of not offering.Every unit of depth of furniture increases the chance that they will cost more than 1000 Saudi Riyals (by a factor of 1.03). Similarly, with each unit increase in the length and width of furniture, the chance that they will cost more than 1000 Saudi riyals also increases (by a factor of 1.01 and 1.02).
 
+## Model comparisons using objective criteria
+modelA <- glance(glm(price ~ category, data = IKEA, family = binomial(link = "logit")))
+modelB <- glance(glm(price ~ sellable_online, data = IKEA, family = binomial(link = "logit")))
+modelC <- glance(glm(price ~ other_colors, data = IKEA, family = binomial(link = "logit")))
+modelD <- glance(glm(price ~ depth, data = IKEA, family = binomial(link = "logit")))
+modelE <- glance(glm(price ~ height, data = IKEA, family = binomial(link = "logit")))
+modelF <- glance(glm(price ~ width, data = IKEA, family = binomial(link = "logit")))
+modelG <- glance(glm(price ~ other_colors + depth + height + width, data = IKEA, family = binomial(link = "logit")))
+Models <- c('SGLM(category)','SGLM(sellable_online)','SGLM(other_colors)','SGLM(depth)','SGLM(height)','SGLM(width)','MGLM(four variables)')
+bind_rows(modelA,modelB,modelC,modelD,modelE, modelF,modelG,.id="Model") %>%
+select(Model,AIC,BIC) %>%
+mutate(Model=Models)%>%
+kable(
+digits = 2,
+caption = "Model comparison values for different models"
+) %>%
+ kable_styling(latex_options = 'HOLD_position', )
+
+The Multivariate Generalized Linear Models has the highest R2 adj value and the lowest AIC & BIC values. This result is the same as the inference using confidence intervals. We should contain other_colors, depth, height and width in the model.
+
 # Conclusion
 
 We found that among the six explanatory variables, whether other colors were provided and the depth, width, and height of furniture had an impact on whether the price of furniture could exceed 1000 Saudi riyals. The category and whether it is sold online has no significant effect on it.
