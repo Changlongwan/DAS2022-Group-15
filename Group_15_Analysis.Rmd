@@ -287,13 +287,25 @@ Logistic regression model:
 model.depth<-glm(price ~ depth, data = IKEA, family = binomial(link = "logit"))
 
 equatiomatic::extract_eq(model.depth)
-model.depth %>%
-               summary() %>%
-               coef()%>%
-               kable(caption = 'Estimates of the parameters from the model.depth') %>%
-               kable_styling(latex_options = 'HOLD_position', )
 ```
-From the above results, the p-value is smaller than 0.025, thus we can conclude that variable depth have impact on price.
+
+Fitting the model yields the result:
+```{r}
+model.depth.coef.logodds <- model.depth %>%
+                            summary() %>%
+                            coef()
+model.depth.coef.logodds %>%
+  kable(caption = '\\label{tab:mod.height} Estimates of the parameters from the model.depth') %>%
+  kable_styling(latex_options = 'HOLD_position', )
+```
+
+So, the best-fitting line is given as:
+
+```{r}
+equatiomatic::extract_eq(model.depth,use_coefs = TRUE)
+```
+
+From the above results, the p-value is smaller than 0.05, thus we can conclude that variable depth have impact on price.
 And with depth increases one unit, the log-odds of price(p>1000) will increase 0.03.
 
 95% confidence interval:
@@ -303,13 +315,13 @@ confint(model.depth)%>%
   kable_styling(font_size = 10, latex_options = "hold_position")
 ```
 
-Log odds:
+The confidence interval for depth variable is (0.02,0.04) that is not contain zerothat there is evidence of a linear relationship between the response variable and the explanatory variable. Therefore we should contain the depth in the future model.
+This can be displayed graphically:
+
 ```{r, eval = TRUE, out.width = '80%', fig.align = "center", fig.cap = "\\label{fig:box9} The log-odds of depth for the price of furniture  over 1000 SAR.", fig.pos = "H"}
 plot_model(model.depth, show.values = TRUE, transform = NULL,
            title = "Log-Odds (P>1000)", show.p = FALSE)
 ```
-The above figure shows the 95% CI of depth is 1.03
-
 
 
 ## Height
@@ -317,10 +329,8 @@ The above figure shows the 95% CI of depth is 1.03
 The logistic regression model is given by:
 ```{r}
 model.height <- glm(price ~ height, data = IKEA, family = binomial(link = "logit"))
-equatiomatic::extract_eq(model.height,use_coefs = TRUE)
+equatiomatic::extract_eq(model.height)
 ```
-
-The log-odds of the group being high price (p>=1000) increase by 0.01 for every one unit increase in height. This provides us with a point estimate of how the log-odds changes with height.
 
 Fitting the model yields the result:
 ```{r}
@@ -332,7 +342,14 @@ mod.height.coef.logodds %>%
   kable_styling(latex_options = 'HOLD_position', )
 ```
 
-From the above results, the p-value is smaller than 0.05, thus we can conclude that variable height  have the impact on price.
+So, the best-fitting line is given as:
+```{r}
+model.height <- glm(price ~ height, data = IKEA, family = binomial(link = "logit"))
+equatiomatic::extract_eq(model.height,use_coefs = TRUE)
+```
+
+From the above results, the p-value is smaller than 0.05, thus we can conclude that variable height  have the impact on price. The log-odds of the group being high price (p>=1000) increase by 0.01 for every one unit increase in height. This provides us with a point estimate of how the log-odds changes with height.
+
 
 95% confidence interval:
 ```{r}
