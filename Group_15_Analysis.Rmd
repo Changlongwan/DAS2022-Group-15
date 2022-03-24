@@ -425,7 +425,7 @@ model.1.coef.logodds %>%
 ```{r}
 # confidence interval
 confint(model.1) %>%
-  kable(caption = '\\label{tab:ciWidth} Confidence interval of the point estimate') %>%
+  kable(caption = '\\label{tab:ciWidth} Confidence interval of the point estimate in multivariate model.1') %>%
   kable_styling(font_size = 10, latex_options = "hold_position")
 ```
 
