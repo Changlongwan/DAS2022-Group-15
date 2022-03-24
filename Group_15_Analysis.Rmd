@@ -179,8 +179,11 @@ Logistic regression model:
 model.category<-glm(price ~ category, data = IKEA, family = binomial(link = "logit"))
 
 equatiomatic::extract_eq(model.category)
-model.category%>%
-  summary()
+model.category %>%
+               summary() %>%
+               coef()%>%
+               kable(caption = 'Estimates of the parameters from the model.category') %>%
+               kable_styling(latex_options = 'HOLD_position', )
 ```
 From the above results, the p-values of each factor in category are too large, thus we can conclude that variable category have no  impact on price.
 
@@ -286,8 +289,11 @@ Logistic regression model:
 model.depth<-glm(price ~ depth, data = IKEA, family = binomial(link = "logit"))
 
 equatiomatic::extract_eq(model.depth)
-model.depth%>%
-  summary()
+model.depth %>%
+               summary() %>%
+               coef()%>%
+               kable(caption = 'Estimates of the parameters from the model.depth') %>%
+               kable_styling(latex_options = 'HOLD_position', )
 
 ```
 From the above results, the p-value is smaller than 0.025, thus we can conclude that variable depth have impact on price.
