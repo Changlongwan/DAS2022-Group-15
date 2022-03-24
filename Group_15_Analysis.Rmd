@@ -495,8 +495,3 @@ When dealing with 'NA' datas, we just ommitted all of them, thus the avalible da
 Moreover, the variable 'category' is distinguished according to the type of furnitures， and they are found not to have an obvious impact on the variable 'price'. Maybe it's proper to use clustering to dealing with 'category' to get a better result.
 
 
-
-
-
-
-
