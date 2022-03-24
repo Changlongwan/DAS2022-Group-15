@@ -219,7 +219,8 @@ sellable.logodds.upper <- mod.sellable.coef.logodds["sellable_onlineTRUE", "Esti
 sellable.logodds.upper
 ```
 
-Hence the point estimate for the log-odds is 15.2, which has a corresponding 95% confidence interval of (-1631.737, 1662.138). 
+Hence the point estimate for the log-odds is 15.2, which has a corresponding 95% confidence interval of (-1631.737, 1662.138). The confidence interval for the parameters in this model contains zero, implying that there is no evidence of a linear relationship between the response variable and the explanatory variable.
+Therefore we should exclude the sellable_online in the future model.
 
 This can be displayed graphically:
 ```{r, eval = TRUE, out.width = '80%', fig.align = "center", fig.cap = "\\label{fig:box7} The log-odds for the price of furniture  over 1000 SAR by sellable online(TRUE).", fig.pos = "H"}
@@ -336,7 +337,7 @@ confint(model.height) %>%
   kable_styling(font_size = 10, latex_options = "hold_position")
 ```
 
-Hence the point estimate for the log-odds is 0.01, which has a corresponding 95% confidence interval of (0.0065853,0.0155878). 
+Hence the point estimate for the log-odds is 0.01, which has a corresponding 95% confidence interval of (0.0065853,0.0155878). The confidence interval for the parameters in this model does not contains zero, implying that there is evidence of a linear relationship between the response variable and the explanatory variable. Therefore we should contain the height in the future model. 
 
 This can be displayed graphically:
 ```{r, eval = TRUE, out.width = '80%', fig.align = "center", fig.cap = "\\label{fig:box10} The log-odds of height for the price of furniture  over 1000 SAR.", fig.pos = "H"}
