@@ -261,7 +261,7 @@ So, the best-fitting line is given as:
 equatiomatic::extract_eq(model.other_colors,use_coefs = TRUE)
 ```
 
-Hence, if the furniture is available in other color options, the log odds of its price over 1000 SAR increase by 0.6.
+Hence, if the furniture is available in other color options, the log odds of its price over 1000 SAR increase by 0.94.
 
 ```{r}
 # confidence interval
@@ -270,7 +270,7 @@ confint(model.other_colors) %>%
   kable_styling(font_size = 10, latex_options = "hold_position")
 ```
 
-Hence the point estimate for the log-odds is 0.6, which has a corresponding 95% confidence interval of (0.22, 0.98). 
+Hence the point estimate for the log-odds is 0.94, which has a corresponding 95% confidence interval of (0.42, 1.46). 
 
 This can be displayed graphically:
 
