@@ -133,8 +133,7 @@ ggplot(data = IKEA,aes(x = price, y = depth, fill = price))+
 ```{r, eval = TRUE, out.width = '80%', fig.align = "center", fig.cap = "\\label{fig:box5} Box Plot of Height by price.", fig.pos = "H"}
 ggplot(data = IKEA, aes(x = price, y = height, fill = price)) +
   geom_boxplot() +
-  labs(x = "price", y = "height", title = "Box Plot of Height by price.")+ 
-  theme(legend.position = "none")
+  labs(x = "price", y = "height", title = "Box Plot of Height by price.")
 ```
 
 Here we can see that the high price group (p>=1000) tend to be more height than that of low price group (p<1000). 
