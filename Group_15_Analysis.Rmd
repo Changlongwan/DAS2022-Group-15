@@ -46,7 +46,6 @@ IKEA<-na.omit(IKEA)
 IKEA$category<-as.factor(IKEA$category)
 IKEA$sellable_online<-as.factor(IKEA$sellable_online)
 IKEA$other_colors<-as.factor(IKEA$other_colors)
-
 IKEA$price[IKEA$price<1000]<-"p<1000"
 IKEA$price[IKEA$price!="p<1000"]<-"p>=1000"
 IKEA$price<-as.factor(IKEA$price)
@@ -91,11 +90,9 @@ IKEA %>%
 ```
 
 ```{r, eval = TRUE, out.width = '80%', fig.align = "center", fig.cap = "\\label{fig:box2} Barplot of price by sellableonline.", fig.pos = "H"}
-
 ggplot(data=IKEA,aes(x = price, group = sellable_online))+
   geom_bar(aes(y = ..prop..,fill = sellable_online), stat = "count", position = "dodge")+
   labs(x="price",y="Proportion", title = "Barplot of price by sellable_online.")
-
 ```
 
 We can see that none of the furniture that is not available for online sale has a price above SAR 1000 (100% vs 0%). And of the furniture offered for sale online, more furniture is below SAR 1,000 (59% vs 41%).
@@ -177,7 +174,6 @@ IKEA %>%
 Logistic regression model:
 ```{r}
 model.category<-glm(price ~ category, data = IKEA, family = binomial(link = "logit"))
-
 equatiomatic::extract_eq(model.category)
 model.category %>%
                summary() %>%
@@ -238,7 +234,6 @@ The logistic regression model is given by:
 ```{r}
 ## price ~ other_colors ##
 model.other_colors <- glm(price ~ other_colors, data = IKEA, family = binomial(link = "logit"))
-
 equatiomatic::extract_eq(model.other_colors)
 #This function can automatically transform the model to mathematical equation
 ```
@@ -261,7 +256,7 @@ So, the best-fitting line is given as:
 equatiomatic::extract_eq(model.other_colors,use_coefs = TRUE)
 ```
 
-Hence, if the furniture is available in other color options, the log odds of its price over 1000 SAR increase by 0.6.
+Hence, if the furniture is available in other color options, the log odds of its price over 1000 SAR increase by 0.94.
 
 ```{r}
 # confidence interval
@@ -270,7 +265,7 @@ confint(model.other_colors) %>%
   kable_styling(font_size = 10, latex_options = "hold_position")
 ```
 
-Hence the point estimate for the log-odds is 0.6, which has a corresponding 95% confidence interval of (0.22, 0.98). 
+Hence the point estimate for the log-odds is 0.94, which has a corresponding 95% confidence interval of (0.42, 1.46). 
 
 This can be displayed graphically:
 
@@ -285,15 +280,26 @@ plot_model(model.other_colors, show.values = TRUE, transform = NULL,
 Logistic regression model:
 ```{r}
 model.depth<-glm(price ~ depth, data = IKEA, family = binomial(link = "logit"))
-
 equatiomatic::extract_eq(model.depth)
-model.depth %>%
-               summary() %>%
-               coef()%>%
-               kable(caption = 'Estimates of the parameters from the model.depth') %>%
-               kable_styling(latex_options = 'HOLD_position', )
 ```
-From the above results, the p-value is smaller than 0.025, thus we can conclude that variable depth have impact on price.
+
+Fitting the model yields the result:
+```{r}
+model.depth.coef.logodds <- model.depth %>%
+                            summary() %>%
+                            coef()
+model.depth.coef.logodds %>%
+  kable(caption = '\\label{tab:mod.height} Estimates of the parameters from the model.depth') %>%
+  kable_styling(latex_options = 'HOLD_position', )
+```
+
+So, the best-fitting line is given as:
+
+```{r}
+equatiomatic::extract_eq(model.depth,use_coefs = TRUE)
+```
+
+From the above results, the p-value is smaller than 0.05, thus we can conclude that variable depth have impact on price.
 And with depth increases one unit, the log-odds of price(p>1000) will increase 0.03.
 
 95% confidence interval:
@@ -303,13 +309,13 @@ confint(model.depth)%>%
   kable_styling(font_size = 10, latex_options = "hold_position")
 ```
 
-Log odds:
+The confidence interval for depth variable is (0.02,0.04) that is not contain zerothat there is evidence of a linear relationship between the response variable and the explanatory variable. Therefore we should contain the depth in the future model.
+This can be displayed graphically:
+
 ```{r, eval = TRUE, out.width = '80%', fig.align = "center", fig.cap = "\\label{fig:box9} The log-odds of depth for the price of furniture  over 1000 SAR.", fig.pos = "H"}
 plot_model(model.depth, show.values = TRUE, transform = NULL,
            title = "Log-Odds (P>1000)", show.p = FALSE)
 ```
-The above figure shows the 95% CI of depth is 1.03
-
 
 
 ## Height
@@ -317,10 +323,8 @@ The above figure shows the 95% CI of depth is 1.03
 The logistic regression model is given by:
 ```{r}
 model.height <- glm(price ~ height, data = IKEA, family = binomial(link = "logit"))
-equatiomatic::extract_eq(model.height,use_coefs = TRUE)
+equatiomatic::extract_eq(model.height)
 ```
-
-The log-odds of the group being high price (p>=1000) increase by 0.01 for every one unit increase in height. This provides us with a point estimate of how the log-odds changes with height.
 
 Fitting the model yields the result:
 ```{r}
@@ -332,7 +336,14 @@ mod.height.coef.logodds %>%
   kable_styling(latex_options = 'HOLD_position', )
 ```
 
-From the above results, the p-value is smaller than 0.05, thus we can conclude that variable height  have the impact on price.
+So, the best-fitting line is given as:
+```{r}
+model.height <- glm(price ~ height, data = IKEA, family = binomial(link = "logit"))
+equatiomatic::extract_eq(model.height,use_coefs = TRUE)
+```
+
+From the above results, the p-value is smaller than 0.05, thus we can conclude that variable height  have the impact on price. The log-odds of the group being high price (p>=1000) increase by 0.01 for every one unit increase in height. This provides us with a point estimate of how the log-odds changes with height.
+
 
 95% confidence interval:
 ```{r}
@@ -357,7 +368,6 @@ The logistic regression model is given by:
 ```{r}
 ## price ~ width ##
 model.width <- glm(price ~ width, data = IKEA, family = binomial(link = "logit"))
-
 equatiomatic::extract_eq(model.width)
 #This function can automatically transform the model to mathematical equation
 ```
@@ -425,7 +435,7 @@ model.1.coef.logodds %>%
 ```{r}
 # confidence interval
 confint(model.1) %>%
-  kable(caption = '\\label{tab:ciWidth} Confidence interval of the point estimate') %>%
+  kable(caption = '\\label{tab:ciWidth} Confidence interval of the point estimate in multivariate model.1') %>%
   kable_styling(font_size = 10, latex_options = "hold_position")
 ```
 
@@ -434,7 +444,6 @@ We found that only two explanatory variables, height and width, were significant
 ```{r}
 ## price ~ height + width ##
 model.2 <- glm(price ~ height + width, data = IKEA, family = binomial(link = "logit"))
-
 equatiomatic::extract_eq(model.2)
 #This function can automatically transform the model to mathematical equation
 ```
