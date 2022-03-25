@@ -498,10 +498,12 @@ We found that, among the six explanatory variables, only width and height have a
 
 # Future Work
 
-Small data size may lead to model inaccuracies
+Small data size may lead to model inaccuracies.
+
 Explore the better way to deal with the missing data, for example, using mean value to replace them instead of removing all “NA” value directly to prevent an insufficient amount of data.
 
-Furniture categories are too many, which may affect the significance of coefficients
+Furniture categories are too many, which may affect the significance of coefficients.
+
 Apply clustering such as k-means to find the impact of the category of furniture on the price variable that improve the results of the model.
 
 
