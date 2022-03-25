@@ -472,7 +472,7 @@ This provides us with a point estimate of how the log-odds changes with age, how
 ```{r}
 # 95% confidence interval
 confint(model.2) %>%
-  kable(caption = '\\label{tab:cimult} Confidence interval of the point estimate in multivariate model.2') %>%
+  kable(caption = '\\label{tab:cimult} Confidence interval of the point estimate in multivariate log.model.2') %>%
   kable_styling(font_size = 10, latex_options = "hold_position")
 ```
 
