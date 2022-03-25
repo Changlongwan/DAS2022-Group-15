@@ -31,5 +31,6 @@ And the details of variables are as below:
 | Final Check  | 24/03/2022 |
 
 ## About How to start
-In the main branch of this repository, there are all needed files. `dataset15.csv` is the raw data of this project, and `Group_15_Analysis.rmd` covers the whole process of analysis. When you download these two files in the same directory on your computer, you can open `Group_15_Analysis.rmd` in `RStudio` simply, and you will see the appropriate comments of code and more details about our analysis. What's more, after you `knit` this .rmd file, a full report will be generated.  
-Another pdf file called `Group_15_Presentation` presents the essential part of this analysis, which can also show the work that we do.
+In the main branch of this repository, there are all needed files.  
+`dataset15.csv` contains the raw data of this project, and `Group_15_Analysis.rmd` covers the whole process of analysis. When you download these two files in the same directory on your computer, you can open `Group_15_Analysis.rmd` in `RStudio` simply, and you will see the appropriate comments of code and more details about our analysis. What's more, after you `knit` this .rmd file, a full report will be generated.  
+Another pdf file called `Group_15_Presentation.pdf` presents the essential part of this analysis, which can also show the work that we do.
