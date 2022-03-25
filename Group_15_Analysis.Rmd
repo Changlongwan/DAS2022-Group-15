@@ -494,12 +494,14 @@ plot_model(model.2, show.values = TRUE,
 
 # Conclusion
 
-We found that, among the six explanatory variables, only width and height have an effect on whether the furniture price exceeds 1000 Saudi Riyal and category, sellable_online, other_colors and depth have no significant effect on it. With each unit increase in the length and width of furniture, the chance that they will cost more than 1000 Saudi riyals increases (by a factor of 1.01 and 1.02).
+We found that, among the six explanatory variables, only width and height have an effect on whether the furniture price exceeds 1000 Saudi Riyal and category, sellable_online, other_colors and depth have no significant effect on it. With each unit increase in the height and width of furniture, the chance that they will cost more than 1000 Saudi riyals increases (by a factor of 1.01 and 1.03).
 
 # Future Work
 
-When dealing with 'NA' datas, we just ommitted all of them, thus the avalible data numbers might be insufficient. There might be better way to tackle with 'NA' data. 
+Small data size may lead to model inaccuracies
+Explore the better way to deal with the missing data, for example, using mean value to replace them instead of removing all “NA” value directly to prevent an insufficient amount of data.
 
-Moreover, the variable 'category' is distinguished according to the type of furnitures， and they are found not to have an obvious impact on the variable 'price'. Maybe it's proper to use clustering to dealing with 'category' to get a better result.
+Furniture categories are too many, which may affect the significance of coefficients
+Apply clustering such as k-means to find the impact of the category of furniture on the price variable that improve the results of the model.
 
 
