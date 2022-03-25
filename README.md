@@ -5,10 +5,15 @@ Task: Which properties of furniture influence whether they cost more than 1000 S
 # Task Assignment
 
 Member 1 coding (Changlong)
+
 Member 2 coding ( Shuhan)
+
 Member 3 coding (Lixia)
+
 Member 4 PowerPoint (nadsupa)
+
 Member 5 PowerPoint (Ruiqi)
+
 Presentation (nadsupa Shuhan Lixia)
 
 DDL for coding : 22/3/2022
